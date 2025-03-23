@@ -1,10 +1,11 @@
 
-import { ReactNode, useRef, useState, useEffect } from 'react';
+import { ReactNode, useRef, useState, useEffect, CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 
 interface AnimatedCardProps {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   glareSize?: number;
   glareOpacity?: number;
   rotationIntensity?: number;
@@ -16,6 +17,7 @@ interface AnimatedCardProps {
 const AnimatedCard = ({
   children,
   className,
+  style,
   glareSize = 100,
   glareOpacity = 0.15,
   rotationIntensity = 10,
@@ -85,13 +87,14 @@ const AnimatedCard = ({
         isHoverable && 'hover:shadow-lg',
         className
       )}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       style={{
         transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.02 : 1})`,
         transition: 'transform 0.2s ease',
+        ...style,
       }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {isGlareEnabled && isHovered && (
         <div
