@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { MapPin, Users, DollarSign, Filter, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -143,12 +142,11 @@ const Venues = () => {
   const [filteredVenues, setFilteredVenues] = useState<VenueProps[]>(venues);
   const [isLoaded, setIsLoaded] = useState(false);
   
-  // Extract all unique locations from venues
   const locations = [...new Set(venues.map(venue => {
     const parts = venue.location.split(', ');
-    return parts[parts.length - 1]; // Return the city/state part
+    return parts[parts.length - 1];
   }))];
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
@@ -158,32 +156,25 @@ const Venues = () => {
   }, []);
   
   useEffect(() => {
-    // Apply filters
     const filtered = venues.filter(venue => {
-      // Search term filter (name, description, location)
       const searchMatch = 
         searchTerm === '' ||
         venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         venue.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         venue.location.toLowerCase().includes(searchTerm.toLowerCase());
       
-      // Price range filter
       const priceMatch = venue.price >= priceRange[0] && venue.price <= priceRange[1];
       
-      // Capacity range filter
       const capacityMatch = venue.capacity >= capacityRange[0] && venue.capacity <= capacityRange[1];
       
-      // Venue type filter
       const venueTypeMatch = 
         selectedVenueTypes.length === 0 ||
         (venue.tags && venue.tags.some(tag => selectedVenueTypes.includes(tag)));
       
-      // Event type filter
       const eventTypeMatch = 
         selectedEventTypes.length === 0 ||
         (venue.tags && venue.tags.some(tag => selectedEventTypes.includes(tag)));
       
-      // Location filter
       const locationMatch =
         selectedLocations.length === 0 ||
         selectedLocations.some(loc => venue.location.includes(loc));
@@ -194,7 +185,6 @@ const Venues = () => {
     setFilteredVenues(filtered);
   }, [searchTerm, priceRange, capacityRange, selectedVenueTypes, selectedEventTypes, selectedLocations]);
   
-  // Toggle selection of filter items
   const toggleVenueType = (type: string) => {
     setSelectedVenueTypes(prev => 
       prev.includes(type) 
@@ -241,7 +231,6 @@ const Venues = () => {
               Use the filters to find the perfect match for your event needs.
             </p>
             
-            {/* Search and Filter Bar */}
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -283,7 +272,6 @@ const Venues = () => {
           </div>
           
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Desktop Filters Panel */}
             {!isMobile && (
               <div className="lg:w-72 space-y-6 sticky top-24 self-start">
                 <div className="bg-card shadow-sm rounded-lg border border-border p-6">
@@ -299,9 +287,7 @@ const Venues = () => {
               </div>
             )}
             
-            {/* Venue Results */}
             <div className="flex-1">
-              {/* Active Filters */}
               {(selectedVenueTypes.length > 0 || selectedEventTypes.length > 0 || selectedLocations.length > 0) && (
                 <div className="mb-6 flex flex-wrap gap-2">
                   {selectedVenueTypes.map(type => (
@@ -333,25 +319,19 @@ const Venues = () => {
                 </div>
               )}
               
-              {/* Results Count */}
               <div className="mb-6">
                 <p className="text-sm text-muted-foreground">
                   Showing {filteredVenues.length} of {venues.length} venues
                 </p>
               </div>
               
-              {/* Venues Grid */}
               {filteredVenues.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredVenues.map((venue, index) => (
                     <VenueCard
                       key={venue.id}
                       venue={venue}
-                      className={cn(
-                        "opacity-0",
-                        isLoaded && "animate-fade-up opacity-100"
-                      )}
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="h-full"
                     />
                   ))}
                 </div>
@@ -376,7 +356,6 @@ const Venues = () => {
   function renderFilters() {
     return (
       <>
-        {/* Price Range */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label htmlFor="price-range" className="font-medium">Price Range</Label>
@@ -397,7 +376,6 @@ const Venues = () => {
         
         <Separator />
         
-        {/* Capacity Range */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label htmlFor="capacity-range" className="font-medium">Capacity</Label>
@@ -418,7 +396,6 @@ const Venues = () => {
         
         <Separator />
         
-        {/* Venue Type */}
         <div className="space-y-4">
           <h4 className="font-medium">Venue Type</h4>
           <div className="grid grid-cols-2 gap-3">
@@ -442,7 +419,6 @@ const Venues = () => {
         
         <Separator />
         
-        {/* Event Type */}
         <div className="space-y-4">
           <h4 className="font-medium">Event Type</h4>
           <div className="grid grid-cols-2 gap-3">
@@ -466,7 +442,6 @@ const Venues = () => {
         
         <Separator />
         
-        {/* Location */}
         <div className="space-y-4">
           <h4 className="font-medium">Location</h4>
           <div className="grid grid-cols-1 gap-2">

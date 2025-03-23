@@ -13,14 +13,17 @@ interface StatCardProps {
     positive: boolean;
   };
   className?: string;
+  // Adding animation delay styling
+  animationDelay?: string;
 }
 
-const StatCard = ({ title, value, description, icon, trend, className }: StatCardProps) => (
+const StatCard = ({ title, value, description, icon, trend, className, animationDelay }: StatCardProps) => (
   <AnimatedCard 
     className={cn(
       "p-6 bg-card rounded-lg border border-border shadow-sm",
       className
     )}
+    style={animationDelay ? { animationDelay } : undefined}
   >
     <div className="flex justify-between items-start">
       <div>
@@ -165,7 +168,7 @@ const DashboardStats = ({ className, userRole = 'client' }: DashboardStatsProps)
           icon={stat.icon}
           trend={stat.trend}
           className="animate-fade-up"
-          style={{ animationDelay: `${index * 100}ms` }}
+          animationDelay={`${index * 100}ms`}
         />
       ))}
     </div>

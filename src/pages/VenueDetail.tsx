@@ -1,177 +1,148 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Users, Calendar, Star, Clock, ArrowLeft, Share2, Heart, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
+import { motion } from 'framer-motion';
+import { Star, MapPin, Users, Clock, Calendar, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import BookingForm from '@/components/ui/BookingForm';
-import CalendarView from '@/components/ui/CalendarView';
-import { VenueProps } from '@/components/ui/VenueCard';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
 
 // Mock data for venue details
-const venues: VenueProps[] = [
-  {
-    id: '1',
-    name: 'Crystal Grand Ballroom',
-    description: 'The Crystal Grand Ballroom is a sophisticated venue featuring elegant chandeliers, marble floors, and floor-to-ceiling windows that allow natural light to flood the space. With its neoclassical architecture and modern amenities, it provides the perfect backdrop for weddings, galas, and other upscale events.',
-    location: 'Downtown, New York',
-    capacity: 300,
-    price: 1200,
-    rating: 4.9,
-    image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
-    tags: ['Wedding', 'Luxury']
-  },
-  {
-    id: '2',
-    name: 'Harbor View Terrace',
-    description: 'Perched on the waterfront with panoramic harbor views, this open-air terrace venue offers a breathtaking setting for events. The space features a covered pavilion, lush greenery, and a modern coastal aesthetic. Ideal for ceremonies at sunset or cocktail receptions under the stars.',
-    location: 'Harbor District, San Francisco',
-    capacity: 150,
-    price: 950,
-    rating: 4.7,
-    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
-    tags: ['Outdoor', 'Scenic']
-  }
-];
-
-// Additional images for gallery
-const venueImages = {
-  '1': [
-    'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1505236524430-514ab1eb7b23?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1515169067868-5387ec356754?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80'
+const mockVenueData = {
+  id: '1',
+  name: 'Grand Ballroom',
+  description: 'An elegant ballroom with crystal chandeliers and marble floors, perfect for weddings and galas.',
+  longDescription: `
+    The Grand Ballroom is our flagship venue, offering an unparalleled setting for your most important events. 
+    With soaring 20-foot ceilings adorned with crystal chandeliers, hand-laid marble floors, and floor-to-ceiling 
+    windows overlooking the city skyline, this space creates an atmosphere of timeless elegance.
+    
+    The venue can accommodate up to 300 guests for a seated dinner or 500 for a standing reception. Our in-house 
+    catering team offers customizable menu options featuring locally-sourced ingredients and international cuisine.
+    
+    The Grand Ballroom includes a spacious pre-function area, perfect for cocktail hours, as well as a private 
+    bridal suite and separate entrance for VIP guests. State-of-the-art lighting and sound systems are included, 
+    with our technical staff available to assist with any special requirements.
+  `,
+  location: '123 Main Street, New York, NY 10001',
+  capacity: 300,
+  pricePerHour: 1200,
+  rating: 4.8,
+  reviewCount: 124,
+  images: [
+    'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80',
+    'https://images.unsplash.com/photo-1515095184717-42a0ff9c4af7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80',
+    'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80',
+    'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80',
   ],
-  '2': [
-    'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1540541338287-41700207dee6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80'
-  ]
+  amenities: [
+    'Free WiFi',
+    'Catering Services',
+    'Audio/Visual Equipment',
+    'Stage',
+    'Dance Floor',
+    'Coat Check',
+    'Valet Parking',
+    'Bridal Suite',
+    'Wheelchair Accessible',
+    'Air Conditioning',
+  ],
+  reviews: [
+    {
+      id: '1',
+      author: 'Sarah Johnson',
+      date: '2023-09-15',
+      rating: 5,
+      comment: 'Absolutely stunning venue! Our wedding was perfect thanks to the amazing staff and beautiful space.',
+    },
+    {
+      id: '2',
+      author: 'Michael Chen',
+      date: '2023-08-22',
+      rating: 4,
+      comment: 'Great venue for our corporate event. The AV equipment was top-notch and the staff was very helpful.',
+    },
+    {
+      id: '3',
+      author: 'Emily Rodriguez',
+      date: '2023-07-30',
+      rating: 5,
+      comment: 'The Grand Ballroom exceeded all our expectations. Our guests couldn't stop talking about how beautiful it was.',
+    },
+  ],
 };
 
-// Mock calendar events
-const calendarEvents = [
+const availableDates = [
   {
-    date: new Date(new Date().setDate(new Date().getDate() + 5)),
-    title: 'Corporate Retreat',
-    status: 'booked',
+    date: new Date(2023, 10, 15),
+    title: 'Morning Slot',
+    status: 'available' as const
   },
   {
-    date: new Date(new Date().setDate(new Date().getDate() + 7)),
-    title: 'Wedding',
-    status: 'booked',
+    date: new Date(2023, 10, 15),
+    title: 'Evening Slot',
+    status: 'booked' as const
   },
   {
-    date: new Date(new Date().setDate(new Date().getDate() + 10)),
-    title: 'Birthday Party',
-    status: 'pending',
+    date: new Date(2023, 10, 16),
+    title: 'Full Day',
+    status: 'pending' as const
   },
   {
-    date: new Date(new Date().setDate(new Date().getDate() + 15)),
-    title: 'Available',
-    status: 'available',
-  },
-];
-
-// Mock reviews
-const reviews = [
-  {
-    id: 1,
-    name: 'Emily Johnson',
-    date: '2 months ago',
-    rating: 5,
-    comment: 'We had our wedding at the Crystal Grand Ballroom and it was absolutely stunning. The staff was incredibly attentive, and the venue itself was breathtaking. Our guests couldn\'t stop talking about how beautiful it was!',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    date: new Date(2023, 10, 17),
+    title: 'Morning Slot',
+    status: 'available' as const
   },
   {
-    id: 2,
-    name: 'Michael Rodriguez',
-    date: '3 months ago',
-    rating: 4,
-    comment: 'Great venue with excellent acoustics. We hosted a corporate gala and everything went smoothly. The only minor issue was with parking, but the venue more than made up for it with their service.',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
-  },
-  {
-    id: 3,
-    name: 'Sarah Thompson',
-    date: '1 month ago',
-    rating: 5,
-    comment: 'Absolutely perfect! The lighting, the atmosphere, and the service were all top-notch. We hosted a charity event here and received countless compliments on the venue choice.',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
-  },
-];
-
-// Amenities
-const amenities = [
-  'Catering Services',
-  'Audio/Visual Equipment',
-  'Wi-Fi Access',
-  'Dance Floor',
-  'Stage',
-  'Dressing Rooms',
-  'Tables and Chairs',
-  'Linens',
-  'Parking',
-  'Wheelchair Accessible',
-  'Air Conditioning',
-  'Bar Services',
+    date: new Date(2023, 10, 17),
+    title: 'Evening Slot',
+    status: 'available' as const
+  }
 ];
 
 const VenueDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const [venue, setVenue] = useState<VenueProps | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [mainImage, setMainImage] = useState('');
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [venue, setVenue] = useState(mockVenueData);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    // Find venue by id from our mock data
-    const foundVenue = venues.find(v => v.id === id);
-    if (foundVenue) {
-      setVenue(foundVenue);
-      setMainImage(foundVenue.image);
-    }
-    
+    // In a real app, fetch venue data based on ID
+    // For now, we'll use mock data and simulate loading
     const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
+      setIsLoading(false);
+    }, 500);
     
     return () => clearTimeout(timer);
   }, [id]);
   
-  const handleShare = () => {
-    // In a real app, you would implement actual sharing functionality
-    navigator.clipboard.writeText(window.location.href);
-    toast.success('Link copied to clipboard');
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === venue.images.length - 1 ? 0 : prevIndex + 1
+    );
   };
   
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    toast.success(isFavorite ? 'Removed from favorites' : 'Added to favorites');
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? venue.images.length - 1 : prevIndex - 1
+    );
   };
   
-  if (!venue) {
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+  
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-xl">Loading...</div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -180,334 +151,200 @@ const VenueDetail = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
-      <div className="flex-1 pt-20">
-        <div className="container mx-auto px-4 py-8">
-          {/* Back Navigation */}
-          <div className="mb-6">
-            <Button variant="ghost" asChild className="pl-0 text-muted-foreground">
-              <Link to="/venues" className="flex items-center gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                Back to Venues
-              </Link>
-            </Button>
+      <main className="flex-1 pt-20">
+        {/* Venue Images Carousel */}
+        <section className="relative h-[50vh] md:h-[60vh] overflow-hidden">
+          <motion.img
+            key={currentImageIndex}
+            src={venue.images[currentImageIndex]}
+            alt={venue.name}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full h-full object-cover"
+          />
+          
+          <div className="absolute inset-0 bg-black/20"></div>
+          
+          <div className="absolute bottom-4 right-4 flex space-x-2">
+            {venue.images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-2 h-2 rounded-full ${
+                  index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                }`}
+                aria-label={`View image ${index + 1}`}
+              />
+            ))}
           </div>
           
-          {/* Venue Header */}
-          <div className="mb-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-              <div>
-                <h1 className="text-3xl font-bold">{venue.name}</h1>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                    <span className="ml-1 font-medium">{venue.rating}</span>
-                    <span className="text-muted-foreground ml-1">({reviews.length} reviews)</span>
+          <button
+            onClick={prevImage}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          
+          <button
+            onClick={nextImage}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full"
+            aria-label="Next image"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </section>
+        
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Venue Details */}
+            <div className="lg:col-span-2">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h1 className="text-3xl font-bold">{venue.name}</h1>
+                  <div className="flex items-center mt-2">
+                    <MapPin className="h-4 w-4 text-muted-foreground mr-1" />
+                    <span className="text-muted-foreground">{venue.location}</span>
                   </div>
-                  <span>•</span>
-                  <div className="flex items-center text-muted-foreground">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    {venue.location}
-                  </div>
+                </div>
+                <div className="flex items-center">
+                  <Star className="h-5 w-5 text-yellow-500 mr-1" />
+                  <span className="font-medium">{venue.rating}</span>
+                  <span className="text-muted-foreground ml-1">({venue.reviewCount} reviews)</span>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="icon" onClick={toggleFavorite}>
-                  <Heart className={cn("h-5 w-5", isFavorite && "fill-red-500 text-red-500")} />
-                </Button>
-                <Button variant="outline" size="icon" onClick={handleShare}>
-                  <Share2 className="h-5 w-5" />
-                </Button>
-              </div>
-            </div>
-            
-            {/* Main Gallery */}
-            <div 
-              className={cn(
-                "grid grid-cols-1 md:grid-cols-4 gap-4",
-                !isLoaded ? "opacity-0" : "opacity-100 transition-opacity duration-500"
-              )}
-            >
-              <div className="md:col-span-3 relative rounded-lg overflow-hidden h-[400px]">
-                <img 
-                  src={mainImage} 
-                  alt={venue.name} 
-                  className="w-full h-full object-cover"
-                />
+              <div className="flex flex-wrap gap-4 mb-6">
+                <div className="flex items-center">
+                  <Users className="h-5 w-5 text-primary mr-2" />
+                  <span>Up to {venue.capacity} guests</span>
+                </div>
+                <div className="flex items-center">
+                  <Clock className="h-5 w-5 text-primary mr-2" />
+                  <span>${venue.pricePerHour} per hour</span>
+                </div>
               </div>
               
-              <div className="grid grid-rows-3 gap-4 h-[400px]">
-                {venueImages[venue.id as keyof typeof venueImages]?.slice(1, 4).map((img, i) => (
-                  <div 
-                    key={i} 
-                    className="rounded-lg overflow-hidden cursor-pointer relative"
-                    onClick={() => setMainImage(img)}
-                  >
-                    <img 
-                      src={img} 
-                      alt={`${venue.name} ${i+1}`} 
-                      className="w-full h-full object-cover"
-                    />
-                    {i === 2 && venueImages[venue.id as keyof typeof venueImages].length > 4 && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <span className="text-white font-medium">
-                          +{venueImages[venue.id as keyof typeof venueImages].length - 3} more
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          {/* Venue Details & Booking */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Venue Info - 2/3 width */}
-            <div className="lg:col-span-2">
-              <Tabs defaultValue="details" className="space-y-8">
+              <Tabs defaultValue="overview" className="mb-8">
                 <TabsList>
-                  <TabsTrigger value="details">Details</TabsTrigger>
-                  <TabsTrigger value="availability">Availability</TabsTrigger>
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="amenities">Amenities</TabsTrigger>
                   <TabsTrigger value="reviews">Reviews</TabsTrigger>
                 </TabsList>
                 
-                {/* Details Tab */}
-                <TabsContent value="details" className="space-y-8">
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">About this venue</h2>
-                    <p className="text-muted-foreground">
-                      {venue.description}
-                    </p>
-                    
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
-                      <div className="bg-secondary/40 rounded-lg p-4">
-                        <div className="flex items-center text-sm text-muted-foreground mb-1">
-                          <Users className="h-4 w-4 mr-2" />
-                          Capacity
-                        </div>
-                        <p className="font-medium">{venue.capacity} guests</p>
-                      </div>
-                      
-                      <div className="bg-secondary/40 rounded-lg p-4">
-                        <div className="flex items-center text-sm text-muted-foreground mb-1">
-                          <Clock className="h-4 w-4 mr-2" />
-                          Min. Hours
-                        </div>
-                        <p className="font-medium">4 hours</p>
-                      </div>
-                      
-                      <div className="bg-secondary/40 rounded-lg p-4">
-                        <div className="flex items-center text-sm text-muted-foreground mb-1">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          Availability
-                        </div>
-                        <p className="font-medium">Year-round</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  {/* Photo Gallery */}
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">Photo Gallery</h2>
-                    <Carousel className="mx-auto">
-                      <CarouselContent>
-                        {venueImages[venue.id as keyof typeof venueImages]?.map((image, index) => (
-                          <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1">
-                              <div className="rounded-lg overflow-hidden h-[200px]">
-                                <img 
-                                  src={image} 
-                                  alt={`${venue.name} ${index}`} 
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            </div>
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <div className="flex justify-center gap-2 mt-4">
-                        <CarouselPrevious className="relative inline-flex static" />
-                        <CarouselNext className="relative inline-flex static" />
-                      </div>
-                    </Carousel>
-                  </div>
-                  
-                  {/* Maps Section would go here */}
-                  <Separator />
-                  
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">Location</h2>
-                    <div className="aspect-video bg-secondary rounded-lg flex items-center justify-center">
-                      <p className="text-muted-foreground">Map would be displayed here</p>
-                    </div>
-                    <p className="text-muted-foreground">
-                      {venue.location}
-                    </p>
+                <TabsContent value="overview" className="mt-4">
+                  <div className="prose max-w-none">
+                    <p className="text-lg mb-4">{venue.description}</p>
+                    <p className="whitespace-pre-line">{venue.longDescription}</p>
                   </div>
                 </TabsContent>
                 
-                {/* Availability Tab */}
-                <TabsContent value="availability" className="space-y-8">
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">Availability Calendar</h2>
-                    <p className="text-muted-foreground">
-                      Check the calendar below to see available dates for booking {venue.name}.
-                    </p>
-                    
-                    <CalendarView 
-                      events={calendarEvents}
-                      onDateSelect={(date) => {
-                        const isBooked = calendarEvents.some(event => 
-                          event.date.getDate() === date.getDate() && 
-                          event.date.getMonth() === date.getMonth() &&
-                          event.date.getFullYear() === date.getFullYear() &&
-                          event.status === 'booked'
-                        );
-                        
-                        if (isBooked) {
-                          toast.info(`${date.toLocaleDateString()} is already booked`);
-                        } else {
-                          toast.success(`${date.toLocaleDateString()} is available for booking`);
-                        }
-                      }}
-                    />
-                    
-                    <div className="flex items-center gap-6 mt-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-green-500" />
-                        <span className="text-sm">Available</span>
+                <TabsContent value="amenities" className="mt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {venue.amenities.map((amenity, index) => (
+                      <div key={index} className="flex items-center">
+                        <Check className="h-5 w-5 text-primary mr-2" />
+                        <span>{amenity}</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500" />
-                        <span className="text-sm">Booked</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                        <span className="text-sm">Pending</span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </TabsContent>
                 
-                {/* Amenities Tab */}
-                <TabsContent value="amenities" className="space-y-8">
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">Venue Amenities</h2>
-                    <p className="text-muted-foreground">
-                      {venue.name} offers the following amenities and services:
-                    </p>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                      {amenities.map((amenity, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                            <Check className="h-3.5 w-3.5 text-primary" />
-                          </div>
-                          <span>{amenity}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">Additional Services</h2>
-                    <p className="text-muted-foreground">
-                      The following services can be arranged upon request for an additional fee:
-                    </p>
-                    
-                    <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                      <li>Professional event planning assistance</li>
-                      <li>Custom lighting packages</li>
-                      <li>Photography and videography</li>
-                      <li>Live entertainment booking</li>
-                      <li>Custom decoration packages</li>
-                      <li>Valet parking services</li>
-                    </ul>
-                  </div>
-                </TabsContent>
-                
-                {/* Reviews Tab */}
-                <TabsContent value="reviews" className="space-y-8">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-2xl font-semibold">Guest Reviews</h2>
-                      <div className="flex items-center">
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-5 w-5 text-amber-500 fill-amber-500" />
-                          ))}
-                        </div>
-                        <span className="ml-2 font-medium">{venue.rating}</span>
-                        <span className="text-muted-foreground ml-1">({reviews.length} reviews)</span>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-6 mt-6">
-                      {reviews.map((review) => (
-                        <div key={review.id} className="pb-6 border-b border-border">
-                          <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 rounded-full overflow-hidden">
-                              <img 
-                                src={review.avatar} 
-                                alt={review.name} 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            
-                            <div className="flex-1">
-                              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-1">
-                                <span className="font-medium">{review.name}</span>
-                                <span className="text-sm text-muted-foreground">{review.date}</span>
-                              </div>
-                              
-                              <div className="flex mb-2">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star 
-                                    key={i} 
-                                    className={cn(
-                                      "h-4 w-4", 
-                                      i < review.rating 
-                                        ? "text-amber-500 fill-amber-500" 
-                                        : "text-muted-foreground"
-                                    )} 
-                                  />
-                                ))}
-                              </div>
-                              
-                              <p className="text-muted-foreground">{review.comment}</p>
-                            </div>
+                <TabsContent value="reviews" className="mt-4">
+                  <div className="space-y-6">
+                    {venue.reviews.map((review) => (
+                      <div key={review.id} className="border-b pb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium">{review.author}</h4>
+                          <div className="flex items-center">
+                            <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                            <span>{review.rating}/5</span>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                        <p className="text-muted-foreground text-sm mb-2">{review.date}</p>
+                        <p>{review.comment}</p>
+                      </div>
+                    ))}
                   </div>
                 </TabsContent>
               </Tabs>
             </div>
             
-            {/* Booking Form - 1/3 width */}
+            {/* Booking Sidebar */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24">
-                <BookingForm
-                  venueId={venue.id}
-                  venueName={venue.name}
-                  onSubmit={(data) => {
-                    console.log('Booking submitted:', data);
-                    toast.success('Booking request submitted successfully!');
-                    // In a real app, you would handle sending this data to your backend
-                  }}
-                />
+              <div className="bg-card rounded-lg border shadow-sm p-6">
+                <h3 className="text-xl font-semibold mb-4">Book this Venue</h3>
+                
+                <div className="mb-6">
+                  <h4 className="font-medium mb-2 flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Available Dates
+                  </h4>
+                  
+                  <div className="space-y-2">
+                    {availableDates.map((slot, index) => (
+                      <div 
+                        key={index}
+                        className={cn(
+                          "flex items-center justify-between p-3 rounded-md",
+                          slot.status === 'available' ? 'bg-primary/10 cursor-pointer hover:bg-primary/20' : 
+                          slot.status === 'pending' ? 'bg-yellow-500/10' : 'bg-muted/50 opacity-60'
+                        )}
+                      >
+                        <div>
+                          <div className="font-medium">{formatDate(slot.date)}</div>
+                          <div className="text-sm text-muted-foreground">{slot.title}</div>
+                        </div>
+                        <Badge
+                          variant={
+                            slot.status === 'available' ? 'outline' : 
+                            slot.status === 'pending' ? 'secondary' : 'destructive'
+                          }
+                        >
+                          {slot.status === 'available' ? 'Available' : 
+                           slot.status === 'pending' ? 'Pending' : 'Booked'}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <Separator className="my-4" />
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span>Base price</span>
+                    <span>${venue.pricePerHour} per hour</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Cleaning fee</span>
+                    <span>$150</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Service fee</span>
+                    <span>$75</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between font-bold">
+                    <span>Total (for 4 hours)</span>
+                    <span>${venue.pricePerHour * 4 + 150 + 75}</span>
+                  </div>
+                </div>
+                
+                <Button className="w-full mt-6">
+                  <Link to="/booking" className="w-full">Book Now</Link>
+                </Button>
+                
+                <p className="text-center text-sm text-muted-foreground mt-4">
+                  You won't be charged yet
+                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
       
       <Footer />
     </div>
