@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -70,7 +71,7 @@ const mockVenueData = {
       author: 'Emily Rodriguez',
       date: '2023-07-30',
       rating: 5,
-      comment: 'The Grand Ballroom exceeded all our expectations. Our guests couldn't stop talking about how beautiful it was.',
+      comment: "The Grand Ballroom exceeded all our expectations. Our guests couldn't stop talking about how beautiful it was.",
     },
   ],
 };

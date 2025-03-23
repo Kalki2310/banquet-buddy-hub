@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -20,13 +19,13 @@ const About = () => {
     {
       name: 'Emily Rodriguez',
       role: 'Event Planning Manager',
-      bio: 'Emily's creative approach to event planning has helped hundreds of clients create unforgettable experiences.',
+      bio: "Emily's creative approach to event planning has helped hundreds of clients create unforgettable experiences.",
       image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&auto=format&fit=crop&q=80'
     },
     {
       name: 'Michael Washington',
       role: 'Client Relations',
-      bio: 'Michael's dedication to client satisfaction ensures that every customer receives personalized attention and care.',
+      bio: "Michael's dedication to client satisfaction ensures that every customer receives personalized attention and care.",
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&auto=format&fit=crop&q=80'
     }
   ];
