@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -78,22 +77,22 @@ const testimonials = [
     name: 'Sarah Thompson',
     role: 'Bride',
     content: 'Our wedding at Crystal Grand Ballroom was an absolute dream come true. The staff was attentive to every detail, and our guests are still talking about how beautiful the venue was!',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80'
   },
   {
     id: 2,
     name: 'Michael Rodriguez',
     role: 'Corporate Event Planner',
-    content: 'As a corporate event planner, I've worked with many venues, but BanquetHub consistently exceeds my expectations. Their spaces are versatile, and their team is incredibly professional.',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
+    content: 'As a corporate event planner, I\'ve worked with many venues, but BanquetHub consistently exceeds my expectations. Their spaces are versatile, and their team is incredibly professional.',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80'
   },
   {
     id: 3,
     name: 'Jennifer Lee',
     role: 'Birthday Celebration',
     content: 'Hosted my 40th birthday at Garden Pavilion and it was perfect! The outdoor setting created a magical atmosphere, and the staff handled everything so I could enjoy my special day.',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80',
-  },
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80'
+  }
 ];
 
 const features = [
@@ -111,7 +110,7 @@ const features = [
     icon: <CreditCard className="h-6 w-6 text-primary" />,
     title: 'Secure Payments',
     description: 'Enjoy peace of mind with our secure and transparent payment system.'
-  },
+  }
 ];
 
 const Index = () => {
@@ -134,7 +133,6 @@ const Index = () => {
     }
   };
   
-  // Animation variants
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -155,7 +153,6 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
-      {/* Hero Section */}
       <div 
         ref={heroRef}
         className="relative pt-20 min-h-[90vh] flex items-center bg-gradient-to-b from-background via-background to-secondary/20"
@@ -252,7 +249,6 @@ const Index = () => {
         </motion.div>
       </div>
       
-      {/* Search Section */}
       <section id="search-section" className="py-16 bg-secondary/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
@@ -314,7 +310,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Featured Venues Section */}
       <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -347,7 +342,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Features Section */}
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -405,7 +399,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Testimonials Section */}
       <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -460,7 +453,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
