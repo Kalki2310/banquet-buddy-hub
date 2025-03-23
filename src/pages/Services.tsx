@@ -60,6 +60,33 @@ const Services = () => {
     }
   ];
 
+  const additionalServices = [
+    {
+      title: 'Entertainment',
+      description: 'From DJs to live bands, we provide a range of entertainment options for your event.'
+    },
+    {
+      title: 'Photography & Videography',
+      description: 'Professional photographers and videographers to capture your special moments.'
+    },
+    {
+      title: 'Transportation',
+      description: 'Luxury transportation services for you and your guests.'
+    },
+    {
+      title: 'Accommodation',
+      description: 'Special rates at partner hotels for out-of-town guests.'
+    },
+    {
+      title: 'Specialty Rentals',
+      description: 'Unique props, furniture, and decor items to enhance your event.'
+    },
+    {
+      title: 'Custom Services',
+      description: "Can't find what you need? Contact us for custom services tailored to your requirements."
+    }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -135,32 +162,7 @@ const Services = () => {
             <h2 className="text-3xl font-bold text-center mb-12">Additional Services</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                {
-                  title: 'Entertainment',
-                  description: 'From DJs to live bands, we provide a range of entertainment options for your event.'
-                },
-                {
-                  title: 'Photography & Videography',
-                  description: 'Professional photographers and videographers to capture your special moments.'
-                },
-                {
-                  title: 'Transportation',
-                  description: 'Luxury transportation services for you and your guests.'
-                },
-                {
-                  title: 'Accommodation',
-                  description: 'Special rates at partner hotels for out-of-town guests.'
-                },
-                {
-                  title: 'Specialty Rentals',
-                  description: 'Unique props, furniture, and decor items to enhance your event.'
-                },
-                {
-                  title: 'Custom Services',
-                  description: 'Can't find what you need? Contact us for custom services tailored to your requirements.'
-                }
-              ].map((service, index) => (
+              {additionalServices.map((service, index) => (
                 <motion.div
                   key={service.title}
                   initial={{ opacity: 0, y: 20 }}
