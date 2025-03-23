@@ -46,6 +46,8 @@ const Navbar = () => {
     };
     
     window.addEventListener('scroll', handleScroll);
+    // Check scroll position immediately on mount
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
@@ -62,13 +64,18 @@ const Navbar = () => {
     { to: '/contact', label: 'Contact' },
   ];
 
+  // Determine if we're on a page that needs a solid navbar background
+  const needsSolidBackground = location.pathname === '/login' || 
+                               location.pathname === '/register' || 
+                               location.pathname.includes('/dashboard');
+
   return (
     <header
       className={cn(
         "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-        isScrolled 
-          ? "bg-white/80 backdrop-blur-md border-b shadow-sm dark:bg-black/60 dark:border-white/10" 
-          : "bg-transparent"
+        isScrolled || needsSolidBackground
+          ? "bg-white shadow-sm dark:bg-gray-900 border-b" 
+          : "bg-white/80 backdrop-blur-md border-b dark:bg-gray-900/80"
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -102,7 +109,7 @@ const Navbar = () => {
                   <ChevronDown size={14} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 animate-fade-in">
+              <DropdownMenuContent align="end" className="w-48 animate-fade-in bg-white dark:bg-gray-900">
                 <DropdownMenuItem asChild>
                   <Link to="/login" className="cursor-pointer">Login</Link>
                 </DropdownMenuItem>
@@ -136,7 +143,7 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-background/95 backdrop-blur-md md:hidden transform transition-transform duration-300 ease-in-out",
+          "fixed inset-0 z-40 bg-white dark:bg-gray-900 transform transition-transform duration-300 ease-in-out md:hidden",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

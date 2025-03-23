@@ -80,6 +80,11 @@
   }
 }
 
+/* Ensure dropdown menus are always visible */
+[data-radix-popper-content-wrapper] {
+  @apply bg-white dark:bg-gray-900 border border-border shadow-lg z-50;
+}
+
 /* Custom Animations */
 .animate-delay-100 {
   animation-delay: 100ms;
