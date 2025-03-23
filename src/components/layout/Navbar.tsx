@@ -73,7 +73,7 @@ const Navbar = () => {
     <header
       className={cn(
         "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-        isScrolled || needsSolidBackground
+        isScrolled || needsSolidBackground || isMobileMenuOpen
           ? "bg-white shadow-sm dark:bg-gray-900 border-b" 
           : "bg-white/80 backdrop-blur-md border-b dark:bg-gray-900/80"
       )}
@@ -141,39 +141,39 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={cn(
-          "fixed inset-0 z-40 bg-white dark:bg-gray-900 transform transition-transform duration-300 ease-in-out md:hidden",
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        <div className="flex flex-col h-full pt-20 p-6 space-y-6">
-          <nav className="flex flex-col space-y-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={cn(
-                  "py-2 text-lg font-medium transition-colors",
-                  location.pathname === link.to 
-                    ? "text-primary" 
-                    : "text-muted-foreground"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex flex-col space-y-4 mt-auto mb-8">
-            <Button variant="outline" className="w-full justify-center">
-              <Link to="/login" className="w-full">Login</Link>
-            </Button>
-            <Button variant="default" className="w-full justify-center">
-              <Link to="/register" className="w-full">Register</Link>
-            </Button>
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-white dark:bg-gray-900 pt-16 md:hidden">
+          <div className="container mx-auto px-4 py-6">
+            <nav className="flex flex-col space-y-4 mb-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={cn(
+                    "py-3 text-lg font-medium border-b border-border transition-colors",
+                    location.pathname === link.to 
+                      ? "text-primary" 
+                      : "text-foreground hover:text-primary"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="flex flex-col space-y-4">
+              <Button variant="outline" className="w-full justify-center py-6">
+                <Link to="/login" className="w-full">Login</Link>
+              </Button>
+              <Button variant="default" className="w-full justify-center py-6">
+                <Link to="/register" className="w-full">Register</Link>
+              </Button>
+              <Button variant="secondary" className="w-full justify-center py-6 mt-2">
+                <Link to="/booking" className="w-full">Book Now</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </header>
   );
 };

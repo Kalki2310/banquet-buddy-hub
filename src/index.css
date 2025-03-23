@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -83,6 +82,16 @@
 /* Ensure dropdown menus are always visible */
 [data-radix-popper-content-wrapper] {
   @apply bg-white dark:bg-gray-900 border border-border shadow-lg z-50;
+}
+
+/* Main content should be visible above the mobile menu */
+main {
+  @apply relative z-10;
+}
+
+/* Mobile menu background */
+.mobile-menu-overlay {
+  @apply bg-white dark:bg-gray-900 z-40;
 }
 
 /* Custom Animations */
